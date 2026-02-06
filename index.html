@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>المنصة الملكية الشاملة - الإصدار V14</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Aref+Ruqaa&family=Cairo:wght@400;600;700&family=Reem+Kufi:wght@400;700&family=Tajawal:wght@400;700&family=Scheherazade+New:wght@400;700&family=IBM+Plex+Sans+Arabic:wght@400;600&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --primary: #0f172a;      /* كحلي غامق */
+            --sidebar-bg: #ffffff;
+            --accent: #d4af37;       /* ذهبي ملكي */
+            --text-main: #334155;
+            --border-color: #e2e8f0;
+            --batch-blue: #3b82f6;   
+            --batch-green: #10b981;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; outline: none; }
+        
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background: #f1f5f9;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* --- Header --- */
+        header {
+            background: var(--primary);
+            color: white;
+            padding: 0 20px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            z-index: 20;
+            border-bottom: 2px solid var(--accent);
+        }
+        header h1 { font-family: 'Cairo'; font-size: 1.2rem; display: flex; align-items: center; gap: 10px; }
+        header .badge { background: var(--accent); color: var(--primary); padding: 2px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: bold; }
+
+        /* --- Layout --- */
+        .main-container { display: flex; flex: 1; height: calc(100vh - 60px); }
+
+        /* --- Sidebar --- */
+        .sidebar {
+            width: 420px;
+            background: var(--sidebar-bg);
+            border-left: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            z-index: 10;
+            box-shadow: 5px 0 15px rgba(0,0,0,0.05);
+        }
+
+        .tabs-nav { display: flex; background: #f8fafc; border-bottom: 1px solid var(--border-color); }
+        .tab-btn {
+            flex: 1; padding: 15px; border: none; background: transparent; cursor: pointer;
+            font-family: 'Cairo'; font-weight: bold; color: #64748b; transition: 0.3s;
+            border-bottom: 3px solid transparent;
+        }
+        .tab-btn.active { color: var(--primary); background: white; border-bottom-color: var(--accent); }
+
+        .tab-content { flex: 1; overflow-y: auto; padding: 20px; display: none; }
+        .tab-content.active { display: block; animation: fadeEffect 0.4s; }
+        @keyframes fadeEffect { from {opacity: 0;} to {opacity: 1;} }
+
+        /* --- Panels & Inputs --- */
+        .panel {
+            background: white; border: 1px solid var(--border-color); border-radius: 8px;
+            padding: 15px; margin-bottom: 15px; position: relative;
+        }
+        .panel-title {
+            font-size: 0.9rem; color: var(--primary); font-weight: bold; margin-bottom: 12px;
+            display: flex; align-items: center; gap: 8px; border-bottom: 1px solid #f1f5f9; padding-bottom: 8px;
+        }
+
+        .form-group { margin-bottom: 12px; }
+        label { display: block; font-size: 0.8rem; font-weight: 700; color: #475569; margin-bottom: 5px; }
+        
+        input[type="text"], textarea, select, input[type="number"] {
+            width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px;
+            font-family: 'Tajawal'; font-size: 0.9rem; transition: 0.2s;
+        }
+        input:focus, textarea:focus, select:focus { border-color: var(--accent); }
+
+        /* --- Colors --- */
+        .color-row { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-top: 5px; }
+        .color-swatch {
+            width: 22px; height: 22px; border-radius: 50%; cursor: pointer;
+            border: 2px solid white; box-shadow: 0 0 0 1px #cbd5e1; transition: transform 0.2s;
+        }
+        .color-swatch:hover { transform: scale(1.2); z-index: 2; box-shadow: 0 0 0 2px var(--primary); }
+
+        /* --- Range Sliders --- */
+        .range-wrap { display: flex; align-items: center; gap: 10px; margin-bottom: 5px; }
+        .range-label { font-size: 0.7rem; color: #aaa; width: 40px; }
+        input[type="range"] { flex: 1; cursor: pointer; accent-color: var(--accent); }
+
+        /* --- File Controls --- */
+        .file-controls { display: flex; gap: 5px; margin-top: 5px; }
+        .btn-upload {
+            flex: 1; background: #f1f5f9; border: 1px dashed #94a3b8; color: #475569;
+            padding: 8px; border-radius: 6px; cursor: pointer; font-size: 0.8rem; text-align: center;
+            transition: 0.2s;
+        }
+        .btn-upload:hover { background: #e2e8f0; border-color: var(--primary); }
+        .btn-danger { background: #ef4444; width: 35px; border: none; border-radius: 6px; color: white; cursor: pointer; }
+        .btn-reload { background: #3b82f6; width: 35px; border: none; border-radius: 6px; color: white; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+
+        /* --- Buttons --- */
+        .btn-group { display: flex; gap: 10px; margin-top: 5px; }
+        .btn-pdf {
+            flex: 1; padding: 12px; border-radius: 8px; font-weight: bold; border: none;
+            background: var(--primary); color: var(--accent); cursor: pointer;
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+        }
+        .btn-img {
+            flex: 1; padding: 12px; border-radius: 8px; font-weight: bold; border: none;
+            background: var(--accent); color: var(--primary); cursor: pointer;
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+        }
+        .btn-pdf:hover, .btn-img:hover { filter: brightness(1.1); transform: translateY(-1px); }
+
+        /* --- Batch Styles --- */
+        .batch-card {
+            background: white; border-radius: 12px; border: 1px solid #e2e8f0;
+            margin-bottom: 20px; overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+        }
+        
+        .batch-header-blue {
+            padding: 12px 15px; border-bottom: 2px solid #93c5fd;
+            color: #1e40af; font-weight: bold; display: flex; align-items: center; gap: 8px;
+            background: #eff6ff;
+        }
+        .batch-body { padding: 20px; }
+        .code-snippet {
+            background: #f8fafc; padding: 12px; border-radius: 6px; border: 1px solid #e2e8f0;
+            font-family: monospace; direction: ltr; text-align: left; margin: 10px 0; color: #475569; font-size: 0.85rem;
+        }
+        .btn-sample {
+            background: #3b82f6; color: white; width: 100%; padding: 10px; border: none;
+            border-radius: 6px; cursor: pointer; font-weight: bold; display: flex;
+            align-items: center; justify-content: center; gap: 8px; font-family: 'Cairo';
+        }
+        .btn-sample:hover { background: #2563eb; }
+
+        .batch-header-gen {
+            padding: 12px 15px; border-bottom: 2px solid #cbd5e1;
+            color: #475569; font-weight: bold; display: flex; align-items: center; gap: 8px;
+            background: #f8fafc;
+        }
+        .upload-zone {
+            border: 2px dashed #6366f1; background: #fdfdfd; border-radius: 12px;
+            padding: 30px; text-align: center; cursor: pointer; transition: 0.3s;
+        }
+        .upload-zone:hover { background: #f5f3ff; border-color: #4f46e5; }
+        .upload-zone i { font-size: 2.5rem; color: #fbbf24; margin-bottom: 10px; }
+        .upload-title { font-size: 1.1rem; font-weight: bold; color: #1e293b; margin-bottom: 5px; }
+        .upload-sub { font-size: 0.9rem; color: #64748b; }
+        
+        .uniform-check {
+            display: flex; align-items: center; gap: 8px; margin: 15px 0;
+            font-weight: bold; font-size: 0.95rem; color: #334155; cursor: pointer;
+        }
+        .uniform-check input { width: 18px; height: 18px; cursor: pointer; accent-color: #3b82f6; }
+        
+        .btn-generate {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white; width: 100%; padding: 15px; border: none; border-radius: 8px;
+            font-weight: bold; font-size: 1.1rem; cursor: pointer; margin-top: 15px;
+            box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3); font-family: 'Cairo';
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+        }
+        .btn-generate:hover { filter: brightness(1.1); transform: translateY(-1px); }
+        .btn-generate:disabled { background: #ccc; cursor: not-allowed; box-shadow: none; }
+
+        .progress-container { margin-top: 15px; display: none; }
+        .progress-bar { height: 8px; background: #e2e8f0; border-radius: 4px; overflow: hidden; }
+        .progress-fill { height: 100%; background: #10b981; width: 0%; transition: width 0.3s; }
+        .progress-text { font-size: 0.8rem; text-align: center; margin-top: 5px; color: #64748b; }
+
+        /* --- Preview --- */
+        .preview-area {
+            flex: 1; background: #1e293b;
+            background-image: radial-gradient(#334155 1px, transparent 1px); background-size: 20px 20px;
+            display: flex; justify-content: center; align-items: center; padding: 40px; overflow: auto;
+        }
+        .canvas-wrapper { box-shadow: 0 20px 60px rgba(0,0,0,0.5); font-size: 0; border: 1px solid #475569; }
+        canvas { display: block; max-width: 100%; height: auto; background: white; }
+
+        @media (max-width: 900px) {
+            .main-container { flex-direction: column; overflow-y: auto; height: auto; }
+            .sidebar { width: 100%; height: auto; }
+            .preview-area { min-height: 400px; padding: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1><i class="fas fa-certificate"></i> المنصة الملكية <span class="badge">V14</span></h1>
+    </header>
+
+    <div class="main-container">
+        <aside class="sidebar">
+            <div class="tabs-nav">
+                <button class="tab-btn active" onclick="switchTab('design')">التصميم</button>
+                <button class="tab-btn" onclick="switchTab('batch')">الدفعات (Excel)</button>
+                <button class="tab-btn" onclick="switchTab('style')">الخطوط والألوان</button>
+            </div>
+
+            <div id="design" class="tab-content active">
+                
+                <div class="panel">
+                    <div class="panel-title"><i class="fas fa-pen-fancy"></i> نصوص الشهادة</div>
+                    
+                    <div class="form-group" style="background: #f0f9ff; padding: 10px; border-radius: 6px; border: 1px dashed #bae6fd;">
+                        <label style="color:#0369a1;"> تحريك كتلة النص بالكامل:</label>
+                        <div class="range-wrap">
+                            <i class="fas fa-arrow-up" style="color:#0369a1;"></i>
+                            <input type="range" id="rng_globalTextY" min="-300" max="300" value="0" oninput="redraw()">
+                            <i class="fas fa-arrow-down" style="color:#0369a1;"></i>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>الجهة المصدرة:</label>
+                        <input type="text" id="inp_intro" value="يسر إدارة أكاديمية المستقبل" oninput="redraw()">
+                    </div>
+                    <div class="form-group">
+                        <label>عبارة التقديم:</label>
+                        <input type="text" id="inp_action" value="أن تتقدم بجزيل الشكر وعظيم الامتنان" oninput="redraw()">
+                    </div>
+                    <div class="form-group">
+                        <label>اسم الطالب (المستلم):</label>
+                        <input type="text" id="inp_name" value="محمد بن عبدالله آل سعود" style="font-weight:bold; color:#123255;" oninput="redraw()">
+                    </div>
+                    <div class="form-group">
+                        <label>نص المتن:</label>
+                        <textarea id="inp_body" rows="3" oninput="redraw()">وذلك تقديراً لجهوده المتميزة وتفوقه الدراسي خلال الفصل الدراسي الثاني لعام ١٤٤٦هـ، متمنين له دوام التوفيق والنجاح.</textarea>
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <div class="panel-title"><i class="fas fa-image"></i> الصور والمخطوطات</div>
+                    
+                    <div class="form-group">
+                        <label>نمط الخلفية:</label>
+                        <select id="bgModeSelect" onchange="redraw()">
+                            <option value="official">القالب الرسمي</option>
+                            <option value="custom">قالب bg</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group" style="display:flex; justify-content:flex-end;">
+                        <button class="btn-reload" style="width:100%; padding:8px;" onclick="loadDefaultBg()" title="إعادة تحميل الصورة من المجلد">
+                            <i class="fas fa-sync-alt"></i> تحديث الخلفية
+                        </button>
+                    </div>
+
+                    <hr style="margin: 15px 0; border:0; border-top:1px solid #eee;">
+
+                    <div class="form-group">
+                        <label>عنوان الشهادة (نص أو مخطوطة):</label>
+                        <input type="text" id="inp_title" value="شهادة شكر وتقدير" oninput="redraw()">
+                        <div class="file-controls">
+                            <label class="btn-upload">
+                                <i class="fas fa-upload"></i> رفع مخطوطة
+                                <input type="file" id="file_manuscript" hidden accept="image/*" onchange="handleFile(this, 'manuscript')">
+                            </label>
+                            <button class="btn-danger" onclick="clearImg('manuscript')" title="حذف"><i class="fas fa-trash"></i></button>
+                        </div>
+                        <div class="range-wrap" style="margin-top:5px;">
+                            <span class="range-label">حجم</span>
+                            <input type="range" id="rng_manuscriptSize" min="50" max="250" value="100" oninput="redraw()">
+                        </div>
+                        <div class="range-wrap">
+                            <span class="range-label">مكان</span>
+                            <input type="range" id="rng_manuscriptY" min="-300" max="300" value="0" oninput="redraw()">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>الشعار:</label>
+                        <div class="file-controls">
+                            <label class="btn-upload">
+                                <i class="fas fa-shield-alt"></i> رفع الشعار
+                                <input type="file" id="file_logo" hidden accept="image/*" onchange="handleFile(this, 'logo')">
+                            </label>
+                            <button class="btn-danger" onclick="clearImg('logo')" title="حذف"><i class="fas fa-trash"></i></button>
+                        </div>
+                        <div class="range-wrap" style="margin-top:5px;">
+                            <span class="range-label">حجم</span>
+                            <input type="range" id="rng_logoSize" min="50" max="300" value="120" oninput="redraw()">
+                        </div>
+                        <div class="range-wrap">
+                            <span class="range-label">أفقي</span>
+                            <input type="range" id="rng_logoX" min="0" max="100" value="50" oninput="redraw()">
+                        </div>
+                        <div class="range-wrap">
+                            <span class="range-label">عمودي</span>
+                            <input type="range" id="rng_logoY" min="0" max="100" value="15" oninput="redraw()">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <div class="panel-title"><i class="fas fa-signature"></i> التوقيعات</div>
+                    <div style="display:flex; gap:10px;">
+                        <div style="flex:1">
+                            <input type="text" id="inp_role1" placeholder="الوظيفة (يمين)" value="وكيل الشؤون التعليمية" oninput="redraw()">
+                            <input type="text" id="inp_sign1" placeholder="الاسم" value="د. خالد العتيبي" style="margin-top:5px;" oninput="redraw()">
+                        </div>
+                        <div style="flex:1">
+                            <input type="text" id="inp_role2" placeholder="الوظيفة (يسار)" value="مدير عام الأكاديمية" oninput="redraw()">
+                            <input type="text" id="inp_sign2" placeholder="الاسم" value="أ. فيصل السبيعي" style="margin-top:5px;" oninput="redraw()">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="btn-group">
+                    <button class="btn-pdf" onclick="downloadSinglePDF()"><i class="fas fa-file-pdf"></i> تحميل PDF</button>
+                    <button class="btn-img" onclick="downloadImage()"><i class="fas fa-image"></i> تحميل صورة</button>
+                </div>
+            </div>
+
+            <div id="batch" class="tab-content">
+                
+                <div class="batch-card">
+                    <div class="batch-header-gen">
+                        <i class="fas fa-chart-bar" style="color:#ec4899;"></i> التوليد الدفعي
+                    </div>
+                    <div class="batch-body">
+                        
+                        <div class="upload-zone" onclick="document.getElementById('file_batch').click()">
+                            <i class="fas fa-folder-open"></i>
+                            <div class="upload-title">اسحب وأفلت ملف CSV أو Excel</div>
+                            <div class="upload-sub">أو اضغط للتصفح</div>
+                            <input type="file" id="file_batch" hidden accept=".xlsx,.xls,.csv" onchange="handleBatchFile(this)">
+                        </div>
+                        <div id="batch_status" style="margin-top:10px; font-size:0.85rem; color:#10b981; font-weight:bold; text-align:center;"></div>
+
+                        <label class="uniform-check">
+                            <input type="checkbox" id="check_uniform" onchange="toggleUniformText()">
+                            استخدام نص موحد لجميع الشهادات
+                        </label>
+
+                        <div id="uniform_text_area" style="display:none; margin-top:5px;">
+                            <label style="font-size:0.85rem; margin-bottom:5px; display:block;">النص الموحد (اختياري):</label>
+                            <textarea id="txt_uniform_body" rows="3">يُمنح هذه الشهادة تقديراً للإنجازات المتميزة</textarea>
+                        </div>
+
+                        <button class="btn-generate" id="btn_start_batch" onclick="startBatch()" disabled>
+                            <i class="fas fa-rocket"></i> توليد الشهادات
+                        </button>
+
+                        <div class="progress-container" id="progress_box">
+                            <div class="progress-bar"><div class="progress-fill" id="progress_fill"></div></div>
+                            <div class="progress-text" id="progress_text">0%</div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="batch-card">
+                    <div class="batch-header-blue">
+                        <i class="fas fa-info-circle"></i> تعليمات ملف CSV/Excel
+                    </div>
+                    <div class="batch-body">
+                        <p style="color:#334155; font-size:0.9rem; margin-bottom:10px;">
+                            يجب أن يحتوي الملف على الأعمدة التالية:
+                            <br>• <strong>name</strong> (الاسم) - إلزامي
+                            <br>• <strong>text</strong> (النص) - اختياري
+                            <br>• <strong>date</strong> (التاريخ) - اختياري
+                        </p>
+                        <div style="text-align:right; font-size:0.85rem; color:#64748b; margin-bottom:5px;">مثال:</div>
+                        <div class="code-snippet">
+                            name,text,date<br>
+                            محمد أحمد,نص مخصص,05-02-2026<br>
+                            سارة علي,,05-02-2026
+                        </div>
+                        <button class="btn-sample" onclick="downloadSample()">
+                            <i class="fas fa-file-csv"></i> تحميل ملف نموذجي
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+
+            <div id="style" class="tab-content">
+                
+                <div class="panel">
+                    <div class="panel-title"><i class="fas fa-font"></i> الخطوط</div>
+                    
+                    <div class="form-group">
+                        <label>الخط الرئيسي للشهادة:</label>
+                        <select id="sel_font" onchange="redraw()">
+                            <option value="'Amiri', serif">Amiri (كلاسيكي)</option>
+                            <option value="'Scheherazade New', serif">Scheherazade New (تقليدي)</option>
+                            <option value="'Aref Ruqaa', serif">Aref Ruqaa (رقعة)</option>
+                            <option value="'Tajawal', sans-serif">Tajawal (حديث)</option>
+                            <option value="'Cairo', sans-serif">Cairo (هندسي)</option>
+                            <option value="'IBM Plex Sans Arabic', sans-serif">IBM Plex Sans (رسمي)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>خط أسماء التوقيعات:</label>
+                        <select id="sel_sign_font" onchange="redraw()">
+                            <option value="'Reem Kufi', sans-serif">Reem Kufi (كوفي)</option>
+                            <option value="'Aref Ruqaa', serif">Aref Ruqaa (رقعة)</option>
+                            <option value="'Amiri', serif">Amiri (نسخ)</option>
+                            <option value="'Tajawal', sans-serif">Tajawal (حديث)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <div class="panel-title"><i class="fas fa-palette"></i> الألوان</div>
+                    
+                    <div class="form-group">
+                        <label>لون الإطار والعناوين:</label>
+                        <div class="color-row">
+                            <input type="color" id="clr_border" value="#123255" oninput="redraw()" style="width:30px; border:none;">
+                            <div class="color-swatch" style="background:#123255" onclick="setClr('clr_border', '#123255')"></div>
+                            <div class="color-swatch" style="background:#3baaa3" onclick="setClr('clr_border', '#3baaa3')"></div>
+                            <div class="color-swatch" style="background:#0d6761" onclick="setClr('clr_border', '#0d6761')"></div>
+                            <div class="color-swatch" style="background:#d1be8f" onclick="setClr('clr_border', '#d1be8f')"></div>
+                            <div class="color-swatch" style="background:#800000" onclick="setClr('clr_border', '#800000')"></div>
+                            <div class="color-swatch" style="background:#333333" onclick="setClr('clr_border', '#333333')"></div>
+                            <div class="color-swatch" style="background:#000000" onclick="setClr('clr_border', '#000000')"></div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>لون اسم الطالب:</label>
+                        <div class="color-row">
+                            <input type="color" id="clr_name" value="#d4af37" oninput="redraw()" style="width:30px; border:none;">
+                            <div class="color-swatch" style="background:#123255" onclick="setClr('clr_name', '#123255')"></div>
+                            <div class="color-swatch" style="background:#3baaa3" onclick="setClr('clr_name', '#3baaa3')"></div>
+                            <div class="color-swatch" style="background:#0d6761" onclick="setClr('clr_name', '#0d6761')"></div>
+                            <div class="color-swatch" style="background:#d1be8f" onclick="setClr('clr_name', '#d1be8f')"></div>
+                            <div class="color-swatch" style="background:#800000" onclick="setClr('clr_name', '#800000')"></div>
+                            <div class="color-swatch" style="background:#333333" onclick="setClr('clr_name', '#333333')"></div>
+                            <div class="color-swatch" style="background:#000000" onclick="setClr('clr_name', '#000000')"></div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>لون النصوص العادية:</label>
+                        <div class="color-row">
+                            <input type="color" id="clr_text" value="#334155" oninput="redraw()" style="width:30px; border:none;">
+                            <div class="color-swatch" style="background:#123255" onclick="setClr('clr_text', '#123255')"></div>
+                            <div class="color-swatch" style="background:#3baaa3" onclick="setClr('clr_text', '#3baaa3')"></div>
+                            <div class="color-swatch" style="background:#0d6761" onclick="setClr('clr_text', '#0d6761')"></div>
+                            <div class="color-swatch" style="background:#d1be8f" onclick="setClr('clr_text', '#d1be8f')"></div>
+                            <div class="color-swatch" style="background:#800000" onclick="setClr('clr_text', '#800000')"></div>
+                            <div class="color-swatch" style="background:#333333" onclick="setClr('clr_text', '#333333')"></div>
+                            <div class="color-swatch" style="background:#000000" onclick="setClr('clr_text', '#000000')"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <main class="preview-area">
+            <div class="canvas-wrapper">
+                <canvas id="mainCanvas" width="2000" height="1414"></canvas>
+            </div>
+        </main>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+    <script>
+        const canvas = document.getElementById('mainCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        let images = { bg: null, logo: null, manuscript: null };
+        let batchData = [];
+
+        window.onload = function() {
+            loadDefaultBg();
+            document.fonts.ready.then(() => redraw());
+        };
+
+        function switchTab(id) {
+            document.querySelectorAll('.tab-content').forEach(d => d.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        function setClr(id, hex) {
+            document.getElementById(id).value = hex;
+            redraw();
+        }
+
+        function toggleUniformText() {
+            const isChecked = document.getElementById('check_uniform').checked;
+            document.getElementById('uniform_text_area').style.display = isChecked ? 'block' : 'none';
+        }
+
+        function loadDefaultBg() {
+            const img = new Image();
+            img.src = "bg1.png"; 
+            img.onload = function() {
+                images.bg = img;
+                const drop = document.getElementById('bgModeSelect');
+                if(drop) drop.value = 'custom';
+                redraw();
+            };
+            img.onerror = function() { console.log("bg1.png missing"); };
+        }
+
+        function handleFile(input, key) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = e => {
+                    const img = new Image();
+                    img.onload = () => { images[key] = img; redraw(); };
+                    img.src = e.target.result;
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        function clearImg(key) {
+            images[key] = null;
+            if(document.getElementById('file_' + key)) {
+                document.getElementById('file_' + key).value = ''; 
+            }
+            redraw();
+        }
+
+        function redraw() {
+            const w = canvas.width;
+            const h = canvas.height;
+            const cx = w / 2;
+
+            const intro = document.getElementById('inp_intro').value;
+            const action = document.getElementById('inp_action').value;
+            const name = document.getElementById('inp_name').value;
+            const body = document.getElementById('inp_body').value;
+            const title = document.getElementById('inp_title').value;
+            
+            const colorBorder = document.getElementById('clr_border').value;
+            const colorName = document.getElementById('clr_name').value;
+            const colorText = document.getElementById('clr_text').value;
+            const font = document.getElementById('sel_font').value;
+            const signFont = document.getElementById('sel_sign_font').value;
+
+            const logoSize = parseInt(document.getElementById('rng_logoSize').value);
+            const logoX = parseInt(document.getElementById('rng_logoX').value);
+            const logoY = parseInt(document.getElementById('rng_logoY').value);
+            
+            const manuscriptSize = parseInt(document.getElementById('rng_manuscriptSize').value);
+            const manuscriptY = parseInt(document.getElementById('rng_manuscriptY').value);
+            const globalTextY = parseInt(document.getElementById('rng_globalTextY').value);
+            
+            const bgMode = document.getElementById('bgModeSelect').value;
+
+            ctx.clearRect(0, 0, w, h);
+
+            if (bgMode === 'custom' && images.bg) {
+                ctx.drawImage(images.bg, 0, 0, w, h);
+            } else {
+                ctx.fillStyle = "#ffffff";
+                ctx.fillRect(0, 0, w, h);
+                ctx.strokeStyle = colorBorder;
+                ctx.lineWidth = 15;
+                ctx.strokeRect(30, 30, w - 60, h - 60);
+                ctx.strokeStyle = "#d4af37"; 
+                ctx.lineWidth = 4;
+                ctx.strokeRect(55, 55, w - 110, h - 110);
+                drawCorner(ctx, 30, 30, colorBorder, 0);
+                drawCorner(ctx, w-30, 30, colorBorder, Math.PI/2);
+                drawCorner(ctx, w-30, h-30, colorBorder, Math.PI);
+                drawCorner(ctx, 30, h-30, colorBorder, -Math.PI/2);
+            }
+
+            if (images.logo) {
+                const scale = logoSize / 100;
+                const lw = 200 * scale;
+                const lh = lw * (images.logo.height / images.logo.width);
+                
+                // حساب الموقع بناءً على السلايدر
+                const posX = (w * logoX / 100) - (lw / 2);
+                const posY = (h * logoY / 100) - (lh / 2);
+                
+                ctx.drawImage(images.logo, posX, posY, lw, lh);
+            }
+
+            let cy = 450;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+
+            if (images.manuscript) {
+                const mScale = manuscriptSize / 100;
+                const mw = 600 * mScale;
+                const mh = mw * (images.manuscript.height / images.manuscript.width);
+                const targetY = (cy - 100) + manuscriptY;
+                ctx.drawImage(images.manuscript, cx - (mw/2), targetY, mw, mh);
+                cy += (mh - 100) + (manuscriptY * 0.5); 
+            } else {
+                ctx.font = `bold 100px "Aref Ruqaa", ${font}`;
+                ctx.fillStyle = colorBorder;
+                ctx.fillText(title, cx, cy);
+                ctx.beginPath();
+                ctx.moveTo(cx - 150, cy + 60);
+                ctx.quadraticCurveTo(cx, cy + 80, cx + 150, cy + 60);
+                ctx.strokeStyle = "#d4af37";
+                ctx.lineWidth = 3;
+                ctx.stroke();
+                cy += 100;
+            }
+
+            cy += globalTextY;
+
+            cy += 60;
+            ctx.fillStyle = colorText;
+            ctx.font = `45px ${font}`;
+            ctx.fillText(intro, cx, cy);
+            
+            cy += 70;
+            ctx.fillText(action, cx, cy);
+
+            cy += 120;
+            ctx.fillStyle = colorName;
+            ctx.font = `bold 90px "Amiri", ${font}`;
+            ctx.fillText(name, cx, cy);
+
+            cy += 100;
+            ctx.fillStyle = colorText;
+            ctx.font = `40px ${font}`;
+            wrapText(ctx, body, cx, cy, 1400, 60);
+
+            const fy = h - 250;
+            ctx.fillStyle = colorBorder;
+            
+            ctx.font = `bold 35px ${font}`; 
+            ctx.fillText(document.getElementById('inp_role1').value, w - 400, fy);
+            ctx.font = `50px ${signFont}`;
+            ctx.fillStyle = "#000";
+            ctx.fillText(document.getElementById('inp_sign1').value, w - 400, fy + 80);
+
+            ctx.fillStyle = colorBorder;
+            ctx.font = `bold 35px ${font}`;
+            ctx.fillText(document.getElementById('inp_role2').value, 400, fy);
+            ctx.font = `50px ${signFont}`;
+            ctx.fillStyle = "#000";
+            ctx.fillText(document.getElementById('inp_sign2').value, 400, fy + 80);
+        }
+
+        function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
+            const words = text.split(' ');
+            let line = '';
+            for(let n = 0; n < words.length; n++) {
+                const testLine = line + words[n] + ' ';
+                const metrics = ctx.measureText(testLine);
+                if (metrics.width > maxWidth && n > 0) {
+                    ctx.fillText(line, x, y);
+                    line = words[n] + ' ';
+                    y += lineHeight;
+                } else {
+                    line = testLine;
+                }
+            }
+            ctx.fillText(line, x, y);
+        }
+
+        function drawCorner(ctx, x, y, color, angle) {
+            const size = 60;
+            ctx.save();
+            ctx.translate(x, y);
+            ctx.rotate(angle);
+            ctx.fillStyle = color;
+            ctx.beginPath();
+            ctx.moveTo(0,0);
+            ctx.lineTo(size, 0);
+            ctx.lineTo(size, 15);
+            ctx.lineTo(15, 15);
+            ctx.lineTo(15, size);
+            ctx.lineTo(0, size);
+            ctx.fill();
+            ctx.restore();
+        }
+
+        function handleBatchFile(input) {
+            const file = input.files[0];
+            if(!file) return;
+            const reader = new FileReader();
+            reader.onload = e => {
+                const data = new Uint8Array(e.target.result);
+                const workbook = XLSX.read(data, {type: 'array'});
+                const sheet = workbook.Sheets[workbook.SheetNames[0]];
+                const json = XLSX.utils.sheet_to_json(sheet);
+                
+                batchData = json.map(r => ({
+                    name: r.Name || r.name || r['الاسم'] || r['اسم الطالب'],
+                    text: r.Text || r.text || r['النص'] || '',
+                    date: r.Date || r.date || r['التاريخ'] || ''
+                })).filter(r => r.name);
+                
+                const status = document.getElementById('batch_status');
+                if(batchData.length > 0) {
+                    status.innerText = `✅ تم العثور على ${batchData.length} اسم.`;
+                    document.getElementById('btn_start_batch').disabled = false;
+                } else {
+                    status.innerText = "❌ لا توجد أعمدة صحيحة!";
+                    status.style.color = "red";
+                }
+            };
+            reader.readAsArrayBuffer(file);
+        }
+
+        async function startBatch() {
+            if(batchData.length === 0) return alert('الرجاء رفع ملف يحتوي على بيانات أولاً!');
+            
+            const zip = new JSZip();
+            const { jsPDF } = window.jspdf;
+            
+            const pBox = document.getElementById('progress_box');
+            pBox.style.display = 'block';
+            document.getElementById('btn_start_batch').disabled = true;
+
+            const useUniform = document.getElementById('check_uniform').checked;
+            const uniformText = document.getElementById('txt_uniform_body').value;
+
+            for(let i=0; i<batchData.length; i++) {
+                const record = batchData[i];
+                
+                document.getElementById('inp_name').value = record.name;
+                
+                if (useUniform) {
+                    document.getElementById('inp_body').value = uniformText;
+                } else if (record.text) {
+                    document.getElementById('inp_body').value = record.text;
+                }
+                
+                redraw();
+                await new Promise(r => setTimeout(r, 20)); 
+                
+                const imgData = canvas.toDataURL('image/jpeg', 0.9);
+                const pdf = new jsPDF({ orientation: 'landscape', unit: 'px', format: [canvas.width, canvas.height] });
+                pdf.addImage(imgData, 'JPEG', 0, 0, canvas.width, canvas.height);
+                zip.file(`${record.name}.pdf`, pdf.output('blob'));
+
+                const pct = Math.round(((i+1)/batchData.length)*100);
+                document.getElementById('progress_fill').style.width = pct + '%';
+                document.getElementById('progress_text').innerText = pct + '%';
+            }
+            
+            document.getElementById('progress_text').innerText = "جاري ضغط الملفات...";
+            const content = await zip.generateAsync({type:"blob"});
+            saveAs(content, "الشهادات.zip");
+            document.getElementById('progress_text').innerText = "✅ تم الانتهاء!";
+            document.getElementById('btn_start_batch').disabled = false;
+        }
+
+        function downloadSinglePDF() {
+            const { jsPDF } = window.jspdf;
+            const imgData = canvas.toDataURL('image/png');
+            const pdf = new jsPDF({orientation: 'landscape', unit:'px', format:[2000, 1414]});
+            pdf.addImage(imgData, 'PNG', 0, 0, 2000, 1414);
+            pdf.save(`شهادة_${document.getElementById('inp_name').value}.pdf`);
+        }
+
+        function downloadImage() {
+            canvas.toBlob(function(blob) {
+                saveAs(blob, `شهادة_${document.getElementById('inp_name').value}.png`);
+            });
+        }
+
+        function downloadSample() {
+            const csvContent = "name,text,date\nمحمد أحمد,مشارك متميز,2026-02-05\nسارة علي,,2026-02-05\nأحمد عبدالله,مشارك متميز,2026-02-06\nفاطمة علي,تقديراً للتميز والإبداع,2026-02-06\nخالد محمد,لإتمام الدورة بنجاح,2026-02-07\nنور أحمد,تقديراً للإنجازات,2026-02-07\nياسمين عبدالرحمن,مشاركة فعالة,2026-02-08\nعمر حسن,جهود متميزة,2026-02-08\nليلى محمود,تطوير متميز,2026-02-09\nحسام الدين,إبداع في العمل,2026-02-09";
+
+            const blob = new Blob(["\ufeff" + csvContent], { type: 'text/csv;charset=utf-8;' });
+            saveAs(blob, "نموذج_البيانات.csv");
+        }
+    </script>
+</body>
+</html>
