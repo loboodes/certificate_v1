@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>المنصة الملكية الشاملة - الإصدار V14</title>
+    <title>المنصة الملكية الشاملة - الإصدار V1</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -13,9 +13,9 @@
 
     <style>
         :root {
-            --primary: #0f172a;      /* كحلي غامق */
+            --primary: #202c60;      /* كحلي غامق */
             --sidebar-bg: #ffffff;
-            --accent: #d4af37;       /* ذهبي ملكي */
+            --accent: #ddb974;       /* ذهبي ملكي */
             --text-main: #334155;
             --border-color: #e2e8f0;
             --batch-blue: #3b82f6;   
@@ -37,8 +37,8 @@
         header {
             background: var(--primary);
             color: white;
-            padding: 0 20px;
-            height: 60px;
+            padding: 0 25px;
+            height: 70px;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -46,11 +46,46 @@
             z-index: 20;
             border-bottom: 2px solid var(--accent);
         }
-        header h1 { font-family: 'Cairo'; font-size: 1.2rem; display: flex; align-items: center; gap: 10px; }
+        header h1 { 
+            font-family: 'Cairo'; font-size: 1.3rem; display: flex; align-items: center; gap: 10px; 
+        }
         header .badge { background: var(--accent); color: var(--primary); padding: 2px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: bold; }
 
+        /* Store Logo In Header */
+        .store-branding {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--accent);
+            text-decoration: none;
+            font-family: 'Reem Kufi', sans-serif;
+            font-size: 1.2rem;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+        .store-branding:hover { color: white; }
+        .store-branding i { font-size: 1.4rem; }
+
+        /* --- Footer --- */
+        footer {
+            background: var(--primary);
+            color: #94a3b8;
+            padding: 10px 20px;
+            text-align: center;
+            font-size: 0.85rem;
+            border-top: 1px solid #1e293b;
+            z-index: 20;
+        }
+        footer a {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+        footer a:hover { color: white; text-decoration: underline; }
+
         /* --- Layout --- */
-        .main-container { display: flex; flex: 1; height: calc(100vh - 60px); }
+        .main-container { display: flex; flex: 1; height: calc(100vh - 110px); /* Adjust for header+footer */ }
 
         /* --- Sidebar --- */
         .sidebar {
@@ -191,6 +226,13 @@
         .progress-fill { height: 100%; background: #10b981; width: 0%; transition: width 0.3s; }
         .progress-text { font-size: 0.8rem; text-align: center; margin-top: 5px; color: #64748b; }
 
+        .manual-input-area {
+            width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px;
+            font-family: 'Tajawal'; font-size: 0.9rem; margin-top: 15px; resize: vertical;
+            min-height: 100px;
+        }
+        .manual-input-area:focus { border-color: var(--batch-blue); outline: none; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); }
+
         /* --- Preview --- */
         .preview-area {
             flex: 1; background: #1e293b;
@@ -211,13 +253,17 @@
 
     <header>
         <h1><i class="fas fa-certificate"></i> المنصة الملكية <span class="badge">V1</span></h1>
+        
+     <a href="https://lobodes.com/" target="_blank" class="store-branding">
+    <img src="logo1.png" alt="LoboDes" style="height: 50px; width: auto;">
+</a>
     </header>
 
     <div class="main-container">
         <aside class="sidebar">
             <div class="tabs-nav">
                 <button class="tab-btn active" onclick="switchTab('design')">التصميم</button>
-                <button class="tab-btn" onclick="switchTab('batch')">الدفعات (Excel)</button>
+                <button class="tab-btn" onclick="switchTab('batch')">الدفعات</button>
                 <button class="tab-btn" onclick="switchTab('style')">الخطوط والألوان</button>
             </div>
 
@@ -247,6 +293,11 @@
                         <label>اسم الطالب (المستلم):</label>
                         <input type="text" id="inp_name" value="محمد بن عبدالله المسعود" style="font-weight:bold; color:#123255;" oninput="redraw()">
                     </div>
+                    <div class="form-group">
+                        <label>الصف / المرحلة (يظهر أسفل الاسم):</label>
+                        <input type="text" id="inp_class" placeholder="مثال: الصف الخامس (أ)" oninput="redraw()">
+                    </div>
+
                     <div class="form-group">
                         <label>نص المتن:</label>
                         <textarea id="inp_body" rows="3" oninput="redraw()">وذلك تقديراً لجهوده المتميزة وتفوقه الدراسي خلال الفصل الدراسي الثاني لعام ١٤٤٦هـ، متمنين له دوام التوفيق والنجاح.</textarea>
@@ -320,12 +371,12 @@
                     <div class="panel-title"><i class="fas fa-signature"></i> التوقيعات</div>
                     <div style="display:flex; gap:10px;">
                         <div style="flex:1">
-                            <input type="text" id="inp_role1" placeholder="الوظيفة (يمين)" value="وكيل الشؤون التعليمية" oninput="redraw()">
-                            <input type="text" id="inp_sign1" placeholder="الاسم" value="خالد المحمد" style="margin-top:5px;" oninput="redraw()">
+                            <input type="text" id="inp_role1" placeholder="الوظيفة (يمين)" value="وكيل المدرسة" oninput="redraw()">
+                            <input type="text" id="inp_sign1" placeholder="الاسم" value="خالد الأحمد" style="margin-top:5px;" oninput="redraw()">
                         </div>
                         <div style="flex:1">
                             <input type="text" id="inp_role2" placeholder="الوظيفة (يسار)" value="مدير المدرسة" oninput="redraw()">
-                            <input type="text" id="inp_sign2" placeholder="الاسم" value=" فيصل الصالح" style="margin-top:5px;" oninput="redraw()">
+                            <input type="text" id="inp_sign2" placeholder="الاسم" value="فيصل الصالح" style="margin-top:5px;" oninput="redraw()">
                         </div>
                     </div>
                 </div>
@@ -344,6 +395,18 @@
                     </div>
                     <div class="batch-body">
                         
+                        <div style="margin-bottom:20px;">
+                            <label style="font-weight:bold; color:#1e293b;">أدخل الأسماء والصفوف يدوياً (كل طالب في سطر):</label>
+                            <textarea id="manual_batch_input" class="manual-input-area" placeholder="أحمد محمد علي ، الصف الخامس&#10;سارة خالد ، الصف السادس&#10;..."></textarea>
+                            <div style="font-size:0.8rem; color:#64748b; margin-top:5px;">يمكنك استخدام الفاصلة العربية (،) أو الإنجليزية (,) للفصل بين الاسم والصف.</div>
+                        </div>
+
+                        <div style="display:flex; align-items:center; gap:10px; margin: 15px 0; color:#64748b;">
+                            <hr style="flex:1; border:0; border-top:1px solid #e2e8f0;">
+                            <span>أو عن طريق ملف</span>
+                            <hr style="flex:1; border:0; border-top:1px solid #e2e8f0;">
+                        </div>
+
                         <div class="upload-zone" onclick="document.getElementById('file_batch').click()">
                             <i class="fas fa-folder-open"></i>
                             <div class="upload-title">اسحب وأفلت ملف CSV أو Excel</div>
@@ -362,8 +425,8 @@
                             <textarea id="txt_uniform_body" rows="3">يُمنح هذه الشهادة تقديراً للإنجازات المتميزة</textarea>
                         </div>
 
-                        <button class="btn-generate" id="btn_start_batch" onclick="startBatch()" disabled>
-                            <i class="fas fa-rocket"></i> توليد الشهادات
+                        <button class="btn-generate" id="btn_start_batch" onclick="startBatch()">
+                            <i class="fas fa-rocket"></i> توليد الشهادات (ZIP)
                         </button>
 
                         <div class="progress-container" id="progress_box">
@@ -482,6 +545,10 @@
         </main>
     </div>
 
+    <footer>
+        جميع الحقوق محفوظة لمنصة <a href="https://lobodes.com/" target="_blank">LoboDes</a> &copy; 2026
+    </footer>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
@@ -556,6 +623,7 @@
             const intro = document.getElementById('inp_intro').value;
             const action = document.getElementById('inp_action').value;
             const name = document.getElementById('inp_name').value;
+            const className = document.getElementById('inp_class').value; 
             const body = document.getElementById('inp_body').value;
             const title = document.getElementById('inp_title').value;
             
@@ -598,11 +666,8 @@
                 const scale = logoSize / 100;
                 const lw = 200 * scale;
                 const lh = lw * (images.logo.height / images.logo.width);
-                
-                // حساب الموقع بناءً على السلايدر
                 const posX = (w * logoX / 100) - (lw / 2);
                 const posY = (h * logoY / 100) - (lh / 2);
-                
                 ctx.drawImage(images.logo, posX, posY, lw, lh);
             }
 
@@ -632,24 +697,41 @@
 
             cy += globalTextY;
 
-            cy += 60;
+            // --- Spacing Constants (Balanced V17) ---
+            const gapSmall = 75;  
+            const gapLarge = 115; 
+
+            // Intro & Action
+            cy += gapLarge;
             ctx.fillStyle = colorText;
             ctx.font = `45px ${font}`;
             ctx.fillText(intro, cx, cy);
             
-            cy += 70;
+            cy += gapSmall;
             ctx.fillText(action, cx, cy);
 
-            cy += 120;
+            // Student Name & Class (Balanced Block)
+            cy += gapLarge;
             ctx.fillStyle = colorName;
             ctx.font = `bold 90px "Amiri", ${font}`;
             ctx.fillText(name, cx, cy);
 
-            cy += 100;
+            if (className) {
+                cy += gapSmall; // Distance Name -> Class
+                ctx.font = `40px ${font}`; // Matches body font size & weight
+                ctx.fillStyle = colorText; 
+                ctx.fillText(className, cx, cy);
+                cy += gapSmall; // Distance Class -> Body (Equal to Name -> Class)
+            } else {
+                cy += gapLarge; // Fallback if no class
+            }
+
+            // Body
             ctx.fillStyle = colorText;
             ctx.font = `40px ${font}`;
             wrapText(ctx, body, cx, cy, 1400, 60);
 
+            // Signatures
             const fy = h - 250;
             ctx.fillStyle = colorBorder;
             
@@ -713,6 +795,7 @@
                 
                 batchData = json.map(r => ({
                     name: r.Name || r.name || r['الاسم'] || r['اسم الطالب'],
+                    class: r.Class || r.class || r['الصف'] || r['المرحلة'] || '',
                     text: r.Text || r.text || r['النص'] || '',
                     date: r.Date || r.date || r['التاريخ'] || ''
                 })).filter(r => r.name);
@@ -720,7 +803,6 @@
                 const status = document.getElementById('batch_status');
                 if(batchData.length > 0) {
                     status.innerText = `✅ تم العثور على ${batchData.length} اسم.`;
-                    document.getElementById('btn_start_batch').disabled = false;
                 } else {
                     status.innerText = "❌ لا توجد أعمدة صحيحة!";
                     status.style.color = "red";
@@ -729,8 +811,34 @@
             reader.readAsArrayBuffer(file);
         }
 
+        function parseManualInput() {
+            const text = document.getElementById('manual_batch_input').value.trim();
+            if(!text) return [];
+            
+            const lines = text.split('\n');
+            const data = [];
+            
+            lines.forEach(line => {
+                if(line.trim()) {
+                    let parts = line.split(/,|،/);
+                    let name = parts[0].trim();
+                    let className = parts.length > 1 ? parts[1].trim() : '';
+                    if(name) {
+                        data.push({ name: name, class: className, text: '' });
+                    }
+                }
+            });
+            return data;
+        }
+
         async function startBatch() {
-            if(batchData.length === 0) return alert('الرجاء رفع ملف يحتوي على بيانات أولاً!');
+            let combinedData = [...batchData];
+            const manualData = parseManualInput();
+            if (manualData.length > 0) {
+                combinedData = [...combinedData, ...manualData];
+            }
+
+            if(combinedData.length === 0) return alert('الرجاء إدخال أسماء يدوياً أو رفع ملف!');
             
             const zip = new JSZip();
             const { jsPDF } = window.jspdf;
@@ -742,10 +850,11 @@
             const useUniform = document.getElementById('check_uniform').checked;
             const uniformText = document.getElementById('txt_uniform_body').value;
 
-            for(let i=0; i<batchData.length; i++) {
-                const record = batchData[i];
+            for(let i=0; i<combinedData.length; i++) {
+                const record = combinedData[i];
                 
                 document.getElementById('inp_name').value = record.name;
+                document.getElementById('inp_class').value = record.class || '';
                 
                 if (useUniform) {
                     document.getElementById('inp_body').value = uniformText;
@@ -761,7 +870,7 @@
                 pdf.addImage(imgData, 'JPEG', 0, 0, canvas.width, canvas.height);
                 zip.file(`${record.name}.pdf`, pdf.output('blob'));
 
-                const pct = Math.round(((i+1)/batchData.length)*100);
+                const pct = Math.round(((i+1)/combinedData.length)*100);
                 document.getElementById('progress_fill').style.width = pct + '%';
                 document.getElementById('progress_text').innerText = pct + '%';
             }
@@ -788,10 +897,10 @@
         }
 
         function downloadSample() {
-            const csvContent = "name,text,date\nمحمد أحمد,مشارك متميز,2026-02-05\nسارة علي,,2026-02-05\nأحمد عبدالله,مشارك متميز,2026-02-06\nفاطمة علي,تقديراً للتميز والإبداع,2026-02-06\nخالد محمد,لإتمام الدورة بنجاح,2026-02-07\nنور أحمد,تقديراً للإنجازات,2026-02-07\nياسمين عبدالرحمن,مشاركة فعالة,2026-02-08\nعمر حسن,جهود متميزة,2026-02-08\nليلى محمود,تطوير متميز,2026-02-09\nحسام الدين,إبداع في العمل,2026-02-09";
+            const csvContent = "name,text,date\nمحمد أحمد علي,يُمنح هذه الشهادة تقديراً للإنجازات المتميزة في مجال التطوير البرمجي,2026-02-05\nسارة محمود حسن,تقديراً للجهود المبذولة في مجال الابتكار التقني,2026-02-05\nأحمد عبدالله محمد,للمشاركة الفاعلة والإبداع في تطوير الحلول الرقمية,2026-02-06\nفاطمة علي حسين,تقديراً للتميز والإبداع في مجال تصميم تجربة المستخدم,2026-02-06\nخالد محمد سعيد,لإتمام دورة البرمجة المتقدمة بتفوق ونجاح باهر,2026-02-07\nنور أحمد إبراهيم,تقديراً للإنجازات المتميزة في إدارة المشاريع التقنية,2026-02-07\nياسمين عبدالرحمن,للمشاركة الفعالة في برنامج تطوير القيادات,2026-02-08\nعمر حسن علي,تقديراً للجهود المبذولة في التحول الرقمي,2026-02-08\nليلى محمود أحمد,للتميز في تطوير تطبيقات الهاتف المحمول,2026-02-09\nحسام الدين محمد,تقديراً للإبداع في مجال الذكاء الاصطناعي,2026-02-09";
 
             const blob = new Blob(["\ufeff" + csvContent], { type: 'text/csv;charset=utf-8;' });
-            saveAs(blob, "نموذج_البيانات.csv");
+            saveAs(blob, "نموذج_بيانات.csv");
         }
     </script>
 </body>
