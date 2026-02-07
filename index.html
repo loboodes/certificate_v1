@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>المنصة الملكية الشاملة - الإصدار V1</title>
+    <title>المنصة الملكية الشاملة - الإصدار V19</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -38,7 +38,7 @@
             background: var(--primary);
             color: white;
             padding: 0 25px;
-            height: 70px;
+            height: 100px; /* زيادة الارتفاع ليتناسب مع اللوقو الكبير */
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -58,14 +58,10 @@
             gap: 10px;
             color: var(--accent);
             text-decoration: none;
-            font-family: 'Reem Kufi', sans-serif;
-            font-size: 1.2rem;
-            font-weight: bold;
             transition: 0.3s;
         }
-        .store-branding:hover { color: white; }
-        .store-branding i { font-size: 1.4rem; }
-
+        .store-branding:hover { opacity: 0.8; }
+        
         /* --- Footer --- */
         footer {
             background: var(--primary);
@@ -85,7 +81,7 @@
         footer a:hover { color: white; text-decoration: underline; }
 
         /* --- Layout --- */
-        .main-container { display: flex; flex: 1; height: calc(100vh - 110px); /* Adjust for header+footer */ }
+        .main-container { display: flex; flex: 1; height: calc(100vh - 140px); /* Adjust for larger header */ }
 
         /* --- Sidebar --- */
         .sidebar {
@@ -254,9 +250,9 @@
     <header>
         <h1><i class="fas fa-certificate"></i> المنصة الملكية <span class="badge">V1</span></h1>
         
-     <a href="https://lobodes.com/" target="_blank" class="store-branding">
-    <img src="logo1.png" alt="LoboDes" style="height: 50px; width: auto;">
-</a>
+        <a href="https://lobodes.com/" target="_blank" class="store-branding">
+            <img src="logo1.png" alt="LoboDes" style="height: 80px; width: auto;">
+        </a>
     </header>
 
     <div class="main-container">
@@ -372,11 +368,11 @@
                     <div style="display:flex; gap:10px;">
                         <div style="flex:1">
                             <input type="text" id="inp_role1" placeholder="الوظيفة (يمين)" value="وكيل المدرسة" oninput="redraw()">
-                            <input type="text" id="inp_sign1" placeholder="الاسم" value="خالد الأحمد" style="margin-top:5px;" oninput="redraw()">
+                            <input type="text" id="inp_sign1" placeholder="الاسم" value="أ. خالد الأحمد" style="margin-top:5px;" oninput="redraw()">
                         </div>
                         <div style="flex:1">
                             <input type="text" id="inp_role2" placeholder="الوظيفة (يسار)" value="مدير المدرسة" oninput="redraw()">
-                            <input type="text" id="inp_sign2" placeholder="الاسم" value="فيصل الصالح" style="margin-top:5px;" oninput="redraw()">
+                            <input type="text" id="inp_sign2" placeholder="الاسم" value="أ. فيصل الصالح" style="margin-top:5px;" oninput="redraw()">
                         </div>
                     </div>
                 </div>
@@ -697,7 +693,7 @@
 
             cy += globalTextY;
 
-            // --- Spacing Constants (Balanced V17) ---
+            // --- Spacing Constants (V17 Standardized) ---
             const gapSmall = 75;  
             const gapLarge = 115; 
 
@@ -710,20 +706,20 @@
             cy += gapSmall;
             ctx.fillText(action, cx, cy);
 
-            // Student Name & Class (Balanced Block)
+            // Student Name & Class
             cy += gapLarge;
             ctx.fillStyle = colorName;
             ctx.font = `bold 90px "Amiri", ${font}`;
             ctx.fillText(name, cx, cy);
 
             if (className) {
-                cy += gapSmall; // Distance Name -> Class
-                ctx.font = `40px ${font}`; // Matches body font size & weight
+                cy += gapSmall; 
+                ctx.font = `40px ${font}`; 
                 ctx.fillStyle = colorText; 
                 ctx.fillText(className, cx, cy);
-                cy += gapSmall; // Distance Class -> Body (Equal to Name -> Class)
+                cy += gapSmall; 
             } else {
-                cy += gapLarge; // Fallback if no class
+                cy += gapLarge;
             }
 
             // Body
