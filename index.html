@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>المنصة الملكية الشاملة - الإصدار V19</title>
+    <title>المنصة الملكية الشاملة - الإصدار V1</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -303,6 +303,38 @@
                 <div class="panel">
                     <div class="panel-title"><i class="fas fa-image"></i> الصور والمخطوطات</div>
                     
+                    <!-- إضافة قسم اختيار قوالب الخلفيات الجاهزة -->
+                    <div class="form-group">
+                        <label>اختر قالب الخلفية الجاهز:</label>
+                        <select id="bgSelector" onchange="updatePreview()">
+                            <option value="">-- اختر خلفية --</option>
+                            <option value="bg1.png">الخلفية 1</option>
+                            <option value="bg2.png">الخلفية 2</option>
+                            <option value="bg3.png">الخلفية 3</option>
+                            <option value="bg4.png">الخلفية 4</option>
+                            <option value="bg5.png">الخلفية 5</option>
+                            <option value="bg6.png">الخلفية 6</option>
+                            <option value="bg7.png">الخلفية 7</option>
+                            <option value="bg8.png">الخلفية 8</option>
+                            <option value="bg9.png">الخلفية 9</option>
+                            <option value="bg10.png">الخلفية 10</option>
+                            <option value="bg11.png">الخلفية 11</option>
+                            <option value="bg12.png">الخلفية 12</option>
+                        </select>
+                    </div>
+
+                    <!-- إضافة قسم رفع الخلفية هنا -->
+                    <div class="form-group">
+                        <label>خلفية الشهادة (رفع يدوي):</label>
+                        <div class="file-controls">
+                            <label class="btn-upload">
+                                <i class="fas fa-upload"></i> رفع خلفية
+                                <input type="file" id="file_bg" hidden accept="image/*" onchange="handleFile(this, 'bg')">
+                            </label>
+                            <button class="btn-danger" onclick="clearImg('bg')" title="حذف"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </div>
+
                     <div class="form-group">
                         <label>نمط الخلفية:</label>
                         <select id="bgModeSelect" onchange="redraw()">
@@ -313,7 +345,7 @@
 
                     <div class="form-group" style="display:flex; justify-content:flex-end;">
                         <button class="btn-reload" style="width:100%; padding:8px;" onclick="loadDefaultBg()" title="إعادة تحميل الصورة من المجلد">
-                            <i class="fas fa-sync-alt"></i> تحديث الخلفية
+                            <i class="fas fa-sync-alt"></i> تحديث الخلفية الافتراضية (bg1.png)
                         </button>
                     </div>
 
@@ -596,10 +628,37 @@
                 const reader = new FileReader();
                 reader.onload = e => {
                     const img = new Image();
-                    img.onload = () => { images[key] = img; redraw(); };
+                    img.onload = () => { 
+                        images[key] = img; 
+                        if(key === 'bg') {
+                            document.getElementById('bgModeSelect').value = 'custom';
+                            // تصفير القائمة المنسدلة عند الرفع اليدوي
+                            const selector = document.getElementById('bgSelector');
+                            if(selector) selector.value = '';
+                        }
+                        redraw(); 
+                    };
                     img.src = e.target.result;
                 };
                 reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        // دالة تحديث مربع المعاينة لتتوافق مع اللوحة (Canvas)
+        function updatePreview() {
+            const selectedBg = document.getElementById("bgSelector").value;
+            
+            if (selectedBg !== "") {
+                const img = new Image();
+                img.src = selectedBg;
+                img.onload = function() {
+                    images.bg = img;
+                    document.getElementById('bgModeSelect').value = 'custom';
+                    redraw();
+                };
+                img.onerror = function() { 
+                    console.log("الخلفية غير موجودة: " + selectedBg); 
+                };
             }
         }
 
@@ -607,6 +666,10 @@
             images[key] = null;
             if(document.getElementById('file_' + key)) {
                 document.getElementById('file_' + key).value = ''; 
+            }
+            if(key === 'bg') {
+                 const selector = document.getElementById('bgSelector');
+                 if(selector) selector.value = '';
             }
             redraw();
         }
